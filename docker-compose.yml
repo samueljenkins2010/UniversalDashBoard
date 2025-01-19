@@ -1,5 +1,6 @@
 networks:
   grafana:
+  services:
 
 services:
   prometheus:
@@ -29,3 +30,24 @@ services:
       - GF_FEATURE_TOGGLES_ENABLE=alertingSimplifiedRouting,alertingQueryAndExpressionsStepMode
     volumes:
       - ./grafana/datasources:/etc/grafana/provisioning/datasources
+
+  consul:
+    image: hashicorp/consul:1.16
+    ports:
+      - 8500:8500
+    networks:
+      - services
+    environment:
+      - CONSUL_BIND_INTERFACE=eth0
+
+  registrator:
+    image: metabrainz/serviceregistrator
+    hostname: registrator
+    restart: unless-stopped
+    extra_hosts:
+      - host.docker.internal:host-gateway
+    networks:
+      - services
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    command: [ "--ip", "127.0.0.1", "--consul-port", "8500", "--consul-host", "host.docker.internal" ]
