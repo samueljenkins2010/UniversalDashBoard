@@ -1,3 +1,8 @@
 spring:
   application:
     name: GrafanaDashboardService
+  cloud:
+    consul:
+      discovery:
+        catalogServicesWatch:
+          enabled: true

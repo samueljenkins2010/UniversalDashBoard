@@ -72,3 +72,12 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
     command: [ "--ip", "127.0.0.1", "--consul-port", "8500", "--consul-host", "host.docker.internal" ]
+
+  dashboard-service:
+    image: dashboard-service:latest
+    container_name: dashboard-service
+    extra_hosts:
+      - host.docker.internal:host-gateway
+    environment:
+      - SPRING_CLOUD_CONSUL_HOST=host.docker.internal
+      - GRAFANA_BASE_URL=http://host.docker.internal:3000
