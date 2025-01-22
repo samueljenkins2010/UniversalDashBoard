@@ -29,6 +29,9 @@ public class ServiceRegistrationListener {
     @Autowired
     private ConsulDiscoveryProperties properties;
 
+    @Autowired
+    private DashboardFactory dashboardFactory;
+
     @EventListener
     public void handleConsulEvent(HeartbeatEvent event) {
         System.out.println("Received a " + event.getSource().getClass() + " event: " + event.getValue());
@@ -38,7 +41,7 @@ public class ServiceRegistrationListener {
             for (Map.Entry<String, List<String>> service : response.getValue().entrySet()) {
                 System.out.println(service.getKey() + " -> " + service.getValue().stream().reduce("", (left, right) -> String.join(",", left, right)));
                 try {
-                    uploader.upload(DashboardFactory.makeDashboard(service.getKey()), false);
+                    uploader.upload(dashboardFactory.makeDashboard(service.getKey()), false);
                 } catch (GrafanaClient.UnexpectedGrafanaResponseException e) {
                     if (e.getResponseCode() == HttpStatus.SC_PRECONDITION_FAILED) {
                         System.out.println(service.getKey() + " service is already registered.");

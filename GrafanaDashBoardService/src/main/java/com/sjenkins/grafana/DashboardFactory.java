@@ -1,16 +1,18 @@
 package com.sjenkins.grafana;
 
+import org.springframework.stereotype.Component;
 import uk.co.szmg.grafana.domain.Dashboard;
 import uk.co.szmg.grafana.domain.DomainFactories;
 
+@Component
 public class DashboardFactory {
-    private static final String DASHBOARD_TITLE = "%s Dashboard";
-    private static final String TARGET_CPU_TITLE = "CPU Usage [1m]";
+    public static final String DASHBOARD_TITLE = "%s Dashboard";
+    public static final String TARGET_CPU_TITLE = "CPU Usage [1m]";
     private static final String TARGET_CPU = "rate(container_cpu_usage_seconds_total{name=\"%s\"}[1m])";
-    private static final String TARGET_RAM_TITLE = "RAM Usage [1m]";
+    public static final String TARGET_RAM_TITLE = "RAM Usage [1m]";
     private static final String TARGET_RAM = "rate(container_memory_usage_bytes{name=\"%s\"}[1m])";
 
-    public static Dashboard makeDashboard(final String service) {
+    public Dashboard makeDashboard(final String service) {
         return DomainFactories.newDashboard().withTitle(String.format(DASHBOARD_TITLE, service))
                 .withTimezone("browser")
                 .addRow(DomainFactories.newRow()
