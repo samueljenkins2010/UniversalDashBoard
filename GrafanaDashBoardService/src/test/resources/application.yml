@@ -1,3 +1,5 @@
 spring:
   application:
     name: GrafanaDashboardServiceUnderTest
+grafana:
+  baseUrl: http://localhost:3000
