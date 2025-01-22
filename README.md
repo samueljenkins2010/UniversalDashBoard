@@ -19,10 +19,52 @@ The two flows are as follows:
 (3) The Dashboard Service watches Consul and receives updates when Consul Services are updated;  
 (4) The Dashboard Service adds a Dashboard to Grafana for newly created containers, on the next update Grafana will collate the data and display them on the configured Dashboard.
 
+## Setup and run
+This project is located in Github on my [personal account](https://github.com/samueljenkins2010/UniversalDashBoard), run the following instructions in bash to setup and run the program.
+
+### Pre-requisites
+
+- Git is required to run Git commands;
+- Docker must be installed.
+
+### Setup
+Run the following to clone the repository with Git:
+```shell
+git clone https://github.com/samueljenkins2010/UniversalDashBoard.git
+```
+Otherwise a zip file of the repository can be downloaded and extracted to some directory on the system.
+
+### Running the application
+1. Navigate the to root of the local UniversalDashBoard repository;
+2. Run the following:
+```shell
+./run-application.sh
+```
+3. Inspect the running containers with the following command:
+```shell
+$ docker ps
+```
+Expect similar output to the following:
+```shell
+CONTAINER ID   IMAGE                                  COMMAND                  CREATED          STATUS                            PORTS                                                                                         NAMES
+e932db4eab17   metabrainz/serviceregistrator:v0.5.3   "serviceregistrator …"   14 seconds ago   Up 8 seconds                                                                                                                    registrator
+3cbb1fd3ce16   prom/prometheus:v2.49.0                "/bin/prometheus --c…"   14 seconds ago   Up 8 seconds                      0.0.0.0:9090->9090/tcp, :::9090->9090/tcp                                                     prometheus
+3233dc62c053   hashicorp/consul:1.16                  "docker-entrypoint.s…"   14 seconds ago   Up 9 seconds                      8300-8302/tcp, 8301-8302/udp, 8600/tcp, 8600/udp, 0.0.0.0:8500->8500/tcp, :::8500->8500/tcp   consul
+48cb3ad7c1fe   dashboard-service:latest               "/cnb/process/web"       14 seconds ago   Up 9 seconds                                                                                                                    dashboard-service
+afe5ca452a7d   grafana/grafana:11.3.0                 "/run.sh"                14 seconds ago   Up 9 seconds                      0.0.0.0:3000->3000/tcp, :::3000->3000/tcp                                                     grafana
+c84ad89c0771   gcr.io/cadvisor/cadvisor:v0.47.2       "/usr/bin/cadvisor -…"   14 seconds ago   Up 8 seconds (health: starting)   0.0.0.0:8080->8080/tcp, :::8080->8080/tcp                                                     cadvisor
+```
+
+### Termination
+Run the following at the root of the local UniversalDashBoard repository to terminate the running containers:
+```shell
+./terminate-application.sh
+```
+
 ## Assumptions
 - Additional Containers are provisioned by operators outside of the system, a [script](add-service.sh) has been provided to add nginx services for monitoring;
 - Containers that are provisioned and require dashboards must have a label or environment variable SERVICE_NAME or SERVICE_[PORT]_NAME that matches the container name with an exposed port;
-- Docker client and Daemon are the bare minimum installed applications on a Ubuntu LTS distribution.
+- Docker Client and Daemon are the bare minimum installed applications on a host computer running some Ubuntu LTS distribution.
 
 ## Dependencies
 
