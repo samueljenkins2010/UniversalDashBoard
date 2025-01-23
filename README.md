@@ -55,6 +55,32 @@ afe5ca452a7d   grafana/grafana:11.3.0                 "/run.sh"                1
 c84ad89c0771   gcr.io/cadvisor/cadvisor:v0.47.2       "/usr/bin/cadvisor -…"   14 seconds ago   Up 8 seconds (health: starting)   0.0.0.0:8080->8080/tcp, :::8080->8080/tcp                                                     cadvisor
 ```
 
+### Testing the application
+
+Run the add-service.sh script and provide a port number between 1-65535, note that the port selected must be unused:
+```shell
+./add-service.sh 40080
+```
+
+This will create an nginx container that can be seen with the following command and its output:
+```shell
+$ docker ps
+CONTAINER ID   IMAGE                                  COMMAND                  CREATED          STATUS                    PORTS                                                                                         NAMES
+9adc63a97488   nginx:latest                           "/docker-entrypoint.…"   11 seconds ago   Up 4 seconds              0.0.0.0:40080->80/tcp, [::]:40080->80/tcp                                                     service-40080
+e932db4eab17   metabrainz/serviceregistrator:v0.5.3   "serviceregistrator …"   13 hours ago     Up 13 minutes                                                                                                           registrator
+3cbb1fd3ce16   prom/prometheus:v2.49.0                "/bin/prometheus --c…"   13 hours ago     Up 37 seconds             0.0.0.0:9090->9090/tcp, :::9090->9090/tcp                                                     prometheus
+3233dc62c053   hashicorp/consul:1.16                  "docker-entrypoint.s…"   13 hours ago     Up 38 seconds             8300-8302/tcp, 8301-8302/udp, 8600/tcp, 8600/udp, 0.0.0.0:8500->8500/tcp, :::8500->8500/tcp   consul
+48cb3ad7c1fe   dashboard-service:latest               "/cnb/process/web"       13 hours ago     Up 37 seconds                                                                                                           dashboard-service
+afe5ca452a7d   grafana/grafana:11.3.0                 "/run.sh"                13 hours ago     Up 37 seconds             0.0.0.0:3000->3000/tcp, :::3000->3000/tcp                                                     grafana
+c84ad89c0771   gcr.io/cadvisor/cadvisor:v0.47.2       "/usr/bin/cadvisor -…"   13 hours ago     Up 37 seconds (healthy)   0.0.0.0:8080->8080/tcp, :::8080->8080/tcp                                                     cadvisor
+```
+
+Grafana will have on its [dashboards page](http://localhost:3000/dashboards) an additional dashboard:
+![Grafana Dashboards](Drawings/dashboards.PNG)
+
+Accessing the dashboard will display the configured graphs and in time will update these with the container's metrics:
+![service-40080 Dashboard](Drawings/40080-dashboard.PNG)
+
 ### Termination
 Run the following at the root of the local UniversalDashBoard repository to terminate the running containers:
 ```shell
