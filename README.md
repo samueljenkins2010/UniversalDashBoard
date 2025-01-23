@@ -9,7 +9,7 @@ The following components make up the system design:
 The two flows are as follows:
 
 ### Metrics Collation Flow
-(a) Docker Daemon's updates its system state as new containers are provisioned, these are detected by cAdvisor and added to its metrics;  
+(a) Docker Daemon updates its system state as new containers are provisioned, these are detected by cAdvisor and added to cAdvisor's metrics;  
 (b) cAdvisor's metrics are scraped by Prometheus and collated into Prometheus' in memory store;  
 (c) Grafana updates its dashboards with the metrics data from Prometheus.
 
@@ -20,7 +20,7 @@ The two flows are as follows:
 (4) The Dashboard Service adds a Dashboard to Grafana for newly created containers, on the next update Grafana will collate the data and display them on the configured Dashboard.
 
 ## Setup and run
-This project is located in Github on my [personal account](https://github.com/samueljenkins2010/UniversalDashBoard), run the following instructions in bash to setup and run the program.
+This project is located in Github on my [personal account](https://github.com/samueljenkins2010/UniversalDashBoard), run the following instructions in bash to set up and run the program.
 
 ### Pre-requisites
 
@@ -32,7 +32,7 @@ Run the following to clone the repository with Git:
 ```shell
 git clone https://github.com/samueljenkins2010/UniversalDashBoard.git
 ```
-Otherwise a zip file of the repository can be downloaded and extracted to some directory on the system.
+Else a zip file of the repository can be downloaded and extracted to some directory on the system.
 
 ### Running the application
 1. Navigate the to root of the local UniversalDashBoard repository;
@@ -62,7 +62,7 @@ Run the add-service.sh script and provide a port number between 1-65535, note th
 ./add-service.sh 40080
 ```
 
-This will create an nginx container that can be seen with the following command and its output:
+This will create a nginx container that can be seen with the following command and its output:
 ```shell
 $ docker ps
 CONTAINER ID   IMAGE                                  COMMAND                  CREATED          STATUS                    PORTS                                                                                         NAMES
@@ -90,7 +90,7 @@ Run the following at the root of the local UniversalDashBoard repository to term
 ### Docker Snap installation
 
 Snap installs docker in its own particular way. This version can be used, however the mount binding for cAdvisor to /var/lib/docker is missing on the host.
-So it is recommended to append the following export statement to ~/.bashrc to point at the corrcet directory in snap:
+So it is recommended to append the following export statement to ~/.bashrc to point at the correct directory in snap:
 ```shell
 export DOCKER_DATA_DIR=/var/snap/docker/common/var-lib-docker
 ```
