@@ -10,12 +10,12 @@ The two flows are as follows:
 
 ### Metrics Collation Flow
 (a) Docker Daemon's updates its system state as new containers are provisioned, these are detected by cAdvisor and added to its metrics;  
-(b) cAdvisor's metrics are scraped by Prometheus and collated into Prometheus' inmemory store;  
+(b) cAdvisor's metrics are scraped by Prometheus and collated into Prometheus' in memory store;  
 (c) Grafana updates its dashboards with the metrics data from Prometheus.
 
 ### Dashboard Registry
-(1) Registrator tracks events from the Docker Daemon, when a container is provisioned then Registrator evaluates the labelling and environment variables on the container for SERVICE_NAME or SERVICE_[PORT]_NAME;  
-(2) Containers are registered as services on Consul with the name set in the SERVICE_NAME or SERVICE_[PORT]_NAME label/variable;  
+(1) Registrator tracks events from the Docker Daemon, when a container is provisioned then Registrator evaluates the labelling and environment variables on the container for `SERVICE_NAME` or `SERVICE_<PORT>_NAME`;  
+(2) Containers are registered as services on Consul with the name set in the `SERVICE_NAME` or `SERVICE_<PORT>_NAME` label/variable;  
 (3) The Dashboard Service watches Consul and receives updates when Consul Services are updated;  
 (4) The Dashboard Service adds a Dashboard to Grafana for newly created containers, on the next update Grafana will collate the data and display them on the configured Dashboard.
 
@@ -61,9 +61,27 @@ Run the following at the root of the local UniversalDashBoard repository to term
 ./terminate-application.sh
 ```
 
+### Docker Snap installation
+
+Snap installs docker in its own particular way. This version can be used, however the mount binding for cAdvisor to /var/lib/docker is missing on the host.
+So it is recommended to append the following export statement to ~/.bashrc to point at the corrcet directory in snap:
+```shell
+export DOCKER_DATA_DIR=/var/snap/docker/common/var-lib-docker
+```
+
+### Windows Support
+
+This application cannot be ran in a Docker Desktop environment due to issues with attaching the necessary system bind mounts for cAdvisor.
+This issue has been with Docker Desktop for Windows for some time and older posts on the issue do not account for the more recent updates where the docker-desktop-data network drive is no longer in existence.
+These complications mean that it is simpler to enable WSL2 and install docker on the lightweight VM provided.
+
+Here are the issues that can inform on this particular issue:
+- https://github.com/google/cadvisor/issues/2648
+- https://github.com/vacp2p/wakurtosis/issues/58#issuecomment-2532341791
+
 ## Assumptions
 - Additional Containers are provisioned by operators outside of the system, a [script](add-service.sh) has been provided to add nginx services for monitoring;
-- Containers that are provisioned and require dashboards must have a label or environment variable SERVICE_NAME or SERVICE_[PORT]_NAME that matches the container name with an exposed port;
+- Containers that are provisioned and require dashboards must have a label or environment variable `SERVICE_NAME` or `SERVICE_<PORT>_NAME` that matches the container name with an exposed port;
 - Docker Client and Daemon are the bare minimum installed applications on a host computer running some Ubuntu LTS distribution.
 
 ## Dependencies
