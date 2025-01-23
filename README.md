@@ -76,7 +76,7 @@ c84ad89c0771   gcr.io/cadvisor/cadvisor:v0.47.2       "/usr/bin/cadvisor -…"  
 ```
 
 Grafana will have on its [dashboards page](http://localhost:3000/dashboards) an additional dashboard:
-![Grafana Dashboards](Drawings/dashboards.PNG)
+![Grafana Dashboards](Drawings/Dashboards.PNG)
 
 Accessing the dashboard will display the configured graphs and in time will update these with the container's metrics:
 ![service-40080 Dashboard](Drawings/40080-dashboard.PNG)
